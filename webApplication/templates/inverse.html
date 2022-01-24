@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6 mx-auto">
+        <h2>Inverse Matrix Calculator</h2>
+        <p>This application uses Numpy to compute the inverse of a non-singular matrix given by the user. It uses the 
+            inputs from the user and does the work with python code.
+        </p>
+    </div>
+
+  </div>
+
+<form action="/inverse" method="post" >
+    <div class="row">
+        <div class="col-sm-3 mx-auto">
+            <select class="form-select" name="dimension" >  
+                <option selected disabled>Dimensions</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+                <option value="4">Four</option>
+                <option value="5">Five</option>
+            </select>
+        </div>
+        <div class="col-sm-3 mx-auto">
+            <button type="submit" class="btn btn-primary" name="select" value="true">Select</button>
+        </div>
+    </div>
+</form>
+<br>
+<br>
+{% if data.n > 0 %}
+    <form action="/inverse" method="post" autocomplete="off">
+        {% for i in range(data.n)%}
+            <div class="row">
+                {% for j in range(data.n)%}
+                <div class="col-sm-2 mx-auto">
+                    <input type="number" class="form-control" step=0.01 placeholder="x{{i+1}}{{j+1}}""} name="x{{i}}{{j}}">
+                </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <br>
+        <div class="col-sm-3 mx-auto">
+            <button type="submit" class="btn btn-primary">Run</button>
+        </div>
+    </form>
+{% endif %}
+
+{% if (not data.invertableMatrix)%}
+<br>
+<div class="col-sm-3 mx-auto">
+    The matrix is not invertable, det(X) = 0 
+</div>
+<br>
+<form action="/inverse" method="post">
+    <div class="col-sm-3 mx-auto">
+        <button type="submit" class="btn btn-danger" name="clear" value="true">Clear</button>
+    </div>
+</form>
+
+{% elif  data.X_inv[0,0] %}
+<br>
+<table class="table table-striped">
+    <tbody>
+        {% for j in range(data.n)%}
+            <tr>
+                {% for i in range(data.n)%}
+                    <td>{{'%0.4f' % data.X_inv[i,j]|float}}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<form action="/inverse" method="post">
+    <div class="col-sm-3 mx-auto">
+        <button type="submit" class="btn btn-danger" name="clear" value="true">Clear</button>
+    </div>
+</form>
+{% endif %}
+</div>
+{% endblock %}
